@@ -11,8 +11,12 @@
 
 ```bash
 # 方式一：编译脚本（自动检测 CMake > GCC > Clang）
+chmod +x compile.sh       # 首次使用需赋予执行权限（从仓库克隆/解压后执行位可能丢失）
 ./compile.sh              # 编译
 ./compile.sh clean        # 清理编译产物
+
+# 若无法或不想修改权限，也可直接用解释器调用（无需执行位）
+bash compile.sh
 
 # 方式二：CMake
 mkdir build && cd build && cmake .. && make
@@ -20,6 +24,8 @@ mkdir build && cd build && cmake .. && make
 # 方式三：手动编译
 gcc -Wall -Wextra -std=c99 -O2 -Iinclude -o studentms src/*.c
 ```
+
+> `compile.sh` 会自动收集 `src/*.c`，新增源文件无需改动脚本。
 
 产物为可执行文件 `studentms`。
 
