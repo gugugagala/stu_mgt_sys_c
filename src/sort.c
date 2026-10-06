@@ -19,24 +19,28 @@
 static int cmp_fields(const Student *a, const Student *b, int field, int order) {
     int result;
     switch (field) {
-    case 1: /* 学号 */
-        result = (a->id > b->id) - (a->id < b->id);
-        break;
-    case 2: /* 姓名 */
-        result = strcmp(a->name, b->name);
-        break;
-    case 3: /* 年龄 */
-        result = (a->age > b->age) - (a->age < b->age);
-        break;
-    case 4: /* 成绩 */
-        if (a->score > b->score) result = 1;
-        else if (a->score < b->score) result = -1;
-        else result = 0;
-        break;
-    case 5: /* 学院 */
-    default:
-        result = strcmp(a->college, b->college);
-        break;
+        case 1: /* 学号 */
+            result = (a->id > b->id) - (a->id < b->id); // 刻意用比较而非相减，避免学号（最大1999999999）相减溢出
+            break;
+        case 2: /* 姓名 */
+            result = strcmp(a->name, b->name);
+            break;
+        case 3: /* 年龄 */
+            result = (a->age > b->age) - (a->age < b->age); // 同理
+            break;
+        case 4: /* 成绩 */
+            if (a->score > b->score) {
+                result = 1;
+            } else if (a->score < b->score) {
+                result = -1;
+            } else {
+                result = 0;
+            }
+            break;
+        case 5: /* 学院 */
+        default:
+            result = strcmp(a->college, b->college);
+            break;
     }
     /* 降序时反向 */
     return (order == 1) ? result : -result;
@@ -91,8 +95,9 @@ static void sort_selection(Student **head, int field, int order) {
         /* 在剩余链表中定位最值结点及其前驱 */
         Student **min_pp = head;
         for (Student **pp = head; *pp; ) {
-            if (cmp_fields(*pp, *min_pp, field, order) < 0)
+            if (cmp_fields(*pp, *min_pp, field, order) < 0) {
                 min_pp = pp;
+            }
             pp = &(*pp)->next;
         }
 
@@ -128,8 +133,9 @@ static void sort_insertion(Student **head, int field, int order) {
 
         /* 在已排序链表中找插入位置 */
         Student **pp = &sorted;
-        while (*pp && cmp_fields(cur, *pp, field, order) > 0)
+        while ((*pp) && (cmp_fields(cur, *pp, field, order) > 0)) {
             pp = &(*pp)->next;
+        }
 
         /* 插入 */
         cur->next = *pp;
@@ -183,7 +189,9 @@ static Student* merge_sorted(Student *a, Student *b) {
 
 /* ---- 归并排序递归体 ---- */
 static Student* sort_merge_rec(Student *head) {
-    if (!head || !head->next) return head;
+    if ((!head) || (!head->next)) {
+        return head;
+    }
 
     Student *left, *right;
     split_list(head, &left, &right);
@@ -225,14 +233,29 @@ static void partition_three_way(Student *pivot,
         int cmp = _cmp(cur, pivot);
 
         if (cmp < 0) {
-            if (!less->head) { less->head = cur; less->tail = cur; }
-            else             { less->tail->next = cur; less->tail = cur; }
+            if (!less->head) {
+                less->head = cur;
+                less->tail = cur;
+            } else {
+                less->tail->next = cur;
+                less->tail = cur;
+            }
         } else if (cmp == 0) {
-            if (!equal->head) { equal->head = cur; equal->tail = cur; }
-            else              { equal->tail->next = cur; equal->tail = cur; }
+            if (!equal->head) {
+                equal->head = cur;
+                equal->tail = cur;
+            } else {
+                equal->tail->next = cur;
+                equal->tail = cur;
+            }
         } else {
-            if (!greater->head) { greater->head = cur; greater->tail = cur; }
-            else                { greater->tail->next = cur; greater->tail = cur; }
+            if (!greater->head) {
+                greater->head = cur;
+                greater->tail = cur;
+            } else {
+                greater->tail->next = cur;
+                greater->tail = cur;
+            }
         }
         cur = next;
     }
@@ -252,7 +275,9 @@ static Student* sort_quick_rec(Student *head) {
     /* pivot 自身链入 equal 链表头部 */
     pivot->next = equal.head;
     equal.head = pivot;
-    if (!equal.tail) equal.tail = pivot;
+    if (!equal.tail) {
+        equal.tail = pivot;
+    }
 
     /* 递归排序 less 和 greater */
     less.head    = sort_quick_rec(less.head);
@@ -264,7 +289,9 @@ static Student* sort_quick_rec(Student *head) {
         result = less.head;
         /* 找到 less 尾 */
         Student *t = less.head;
-        while (t->next) t = t->next;
+        while (t->next) {
+            t = t->next;
+        }
         t->next = equal.head;
     } else {
         result = equal.head;
@@ -289,8 +316,9 @@ static void sort_quick(Student **head, int field, int order) {
 
 /* ---- 梳排序辅助：按 gap 步进获取第 k 个后继结点 ---- */
 static Student* node_at_offset(Student *node, int offset) {
-    while (node && offset-- > 0)
+    while (node && offset-- > 0) {
         node = node->next;
+    }
     return node;
 }
 
@@ -305,8 +333,14 @@ static Student* node_at_offset(Student *node, int offset) {
 static void sort_comb(Student **head, int field, int order) {
     /* 统计链表长度 */
     int n = 0;
-    for (Student *p = *head; p; p = p->next) n++;
-    if (n < 2) return;
+
+    for (Student *p = *head; p; p = p->next) {
+        n++;
+    }
+
+    if (n < 2) {
+        return;
+    }
 
     int gap = n;
     int swapped;
@@ -322,14 +356,17 @@ static void sort_comb(Student **head, int field, int order) {
         while (*pp) {
             /* 找到 gap 步之后的结点 */
             Student *ahead = node_at_offset(*pp, gap);
-            if (!ahead) break;   /* 超出链表尾部 */
+            if (!ahead) {
+                break;   /* 超出链表尾部 */
+            }
 
             if (cmp_fields(*pp, ahead, field, order) > 0) {
                 /* 交换两个结点：摘除 ahead 并插入到 *pp 前面 */
                 /* 先找到 ahead 的前驱 */
                 Student *prev_ahead = *pp;
-                for (int i = 0; i < gap - 1; i++)
+                for (int i = 0; i < gap - 1; i++) {
                     prev_ahead = prev_ahead->next;
+                }
 
                 /* 摘除 ahead */
                 prev_ahead->next = ahead->next;
@@ -345,7 +382,7 @@ static void sort_comb(Student **head, int field, int order) {
                 pp = &(*pp)->next;
             }
         }
-    } while (gap > 1 || swapped);
+    } while ((gap > 1) || (swapped));
 }
 
 /* ============================================================
@@ -367,11 +404,13 @@ static int select_sort_algorithm(void) {
     printf("  5) 快速排序          6) 梳排序\n");
     int algo = 1;  /* 默认冒泡 */
     char buf[INPUT_BUF_LEN];
-    if (safe_get_string_allow_empty("请选择 (默认1): ", buf, sizeof(buf)) != 0) return -1;
+    if (safe_get_string_allow_empty("请选择 (默认1): ", buf, sizeof(buf)) != 0) {
+        return -1;
+    }
     if (buf[0] != '\0') {
         char *endptr;
         long v = strtol(buf, &endptr, 10);
-        if (endptr == buf || *endptr != '\0' || v < 1 || v > 6) {
+        if ((endptr == buf) || (*endptr != '\0') || (v < 1) || (v > 6)) {
             printf("[!] 输入无效，使用默认算法（冒泡排序）。\n");
         } else {
             algo = (int)v;
@@ -384,37 +423,43 @@ static int select_sort_algorithm(void) {
  * 排序入口 — 选择算法、字段、升降序后执行排序
  * ============================================================ */
 void sort_students(Student **head) {
-    if (!*head || !(*head)->next) {
+    if ((!*head) || (!(*head)->next)) {
         printf("(记录不足，无需排序)\n");
         return;
     }
 
     int algo = select_sort_algorithm();
-    if (algo < 0) return;
+    if (algo < 0) {
+        return;
+    }
 
     /* ---- 选择排序字段 ---- */
     int field;
     printf("\n排序字段:\n");
     printf("  1) 学号    2) 姓名    3) 年龄\n");
     printf("  4) 成绩    5) 学院\n");
-    if (safe_get_int("请选择: ", 1, 5, &field) != 0) return;
+    if (safe_get_int("请选择: ", 1, 5, &field) != 0) {
+        return;
+    }
 
     /* ---- 选择升降序 ---- */
     int order;
     printf("排序方式: 1) 升序  2) 降序\n");
-    if (safe_get_int("请选择: ", 1, 2, &order) != 0) return;
+    if (safe_get_int("请选择: ", 1, 2, &order) != 0) {
+        return;
+    }
 
     /* ---- 执行排序（计时） ---- */
     struct timespec t_start, t_end;
     clock_gettime(CLOCK_MONOTONIC, &t_start);
 
     switch (algo) {
-    case 1: sort_bubble(head, field, order);    break;
-    case 2: sort_selection(head, field, order); break;
-    case 3: sort_insertion(head, field, order); break;
-    case 4: sort_merge(head, field, order);     break;
-    case 5: sort_quick(head, field, order);     break;
-    case 6: sort_comb(head, field, order);      break;
+        case 1: sort_bubble(head, field, order);    break;
+        case 2: sort_selection(head, field, order); break;
+        case 3: sort_insertion(head, field, order); break;
+        case 4: sort_merge(head, field, order);     break;
+        case 5: sort_quick(head, field, order);     break;
+        case 6: sort_comb(head, field, order);      break;
     }
 
     clock_gettime(CLOCK_MONOTONIC, &t_end);
