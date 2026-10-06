@@ -130,12 +130,18 @@ void display_all(const Student *head) {
     printf("\n");
 
     /* 表头 */
-    print_field("学号", COL_ID, 0); printf(" ");
-    print_field("姓名", COL_NAME, 1); printf(" ");
-    print_field("性别", COL_GENDER, 1); printf(" ");
-    print_field("年龄", COL_AGE, 0); printf(" ");
-    print_field("成绩", COL_SCORE, 0); printf(" ");
-    print_field("学院", COL_COLLEGE, 1); printf("\n");
+    print_field("学号", COL_ID, 0);
+    printf(" ");
+    print_field("姓名", COL_NAME, 1);
+    printf(" ");
+    print_field("性别", COL_GENDER, 1);
+    printf(" ");
+    print_field("年龄", COL_AGE, 0);
+    printf(" ");
+    print_field("成绩", COL_SCORE, 0);
+    printf(" ");
+    print_field("学院", COL_COLLEGE, 1);
+    printf("\n");
 
     /* 分隔线 */
     int total = COL_ID+1 + COL_NAME+1 + COL_GENDER+1 + COL_AGE+1
@@ -149,14 +155,20 @@ void display_all(const Student *head) {
     for (const Student *p = head; p; p = p->next) {
         char buf[64];
         snprintf(buf, sizeof(buf), "%d", p->id);
-        print_field(buf, COL_ID, 0); printf(" ");
-        print_field(p->name, COL_NAME, 1); printf(" ");
-        print_field(p->gender, COL_GENDER, 1); printf(" ");
+        print_field(buf, COL_ID, 0);
+        printf(" ");
+        print_field(p->name, COL_NAME, 1);
+        printf(" ");
+        print_field(p->gender, COL_GENDER, 1);
+        printf(" ");
         snprintf(buf, sizeof(buf), "%d", p->age);
-        print_field(buf, COL_AGE, 0); printf(" ");
+        print_field(buf, COL_AGE, 0);
+        printf(" ");
         snprintf(buf, sizeof(buf), "%.2f", p->score);
-        print_field(buf, COL_SCORE, 0); printf(" ");
-        print_field(p->college, COL_COLLEGE, 1); printf("\n");
+        print_field(buf, COL_SCORE, 0);
+        printf(" ");
+        print_field(p->college, COL_COLLEGE, 1);
+        printf("\n");
     }
     printf("\n");
 }
@@ -400,13 +412,17 @@ static void statistics_score(const Student *head) {
     char buf[64];
     printf("\n========== 成绩统计 ==========\n");
     snprintf(buf, sizeof(buf), "%.2f", total / count);
-    print_field("平均分:", LW, 1); printf("%s\n", buf);
+    print_field("平均分:", LW, 1);
+    printf("%s\n", buf);
     snprintf(buf, sizeof(buf), "%.2f", max_score);
-    print_field("最高分:", LW, 1); printf("%s\n", buf);
+    print_field("最高分:", LW, 1);
+    printf("%s\n", buf);
     snprintf(buf, sizeof(buf), "%.2f", min_score);
-    print_field("最低分:", LW, 1); printf("%s\n", buf);
+    print_field("最低分:", LW, 1);
+    printf("%s\n", buf);
     snprintf(buf, sizeof(buf), "%d (<60分)", fail_count);
-    print_field("不及格人数:", LW, 1); printf("%s\n", buf);
+    print_field("不及格人数:", LW, 1);
+    printf("%s\n", buf);
 }
 
 static void statistics_age(const Student *head) {

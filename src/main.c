@@ -13,12 +13,18 @@
  */
 static void print_student_table_row(const Student *s) {
     printf("\n");
-    print_field("学号", COL_ID, 0); printf(" ");
-    print_field("姓名", COL_NAME, 1); printf(" ");
-    print_field("性别", COL_GENDER, 1); printf(" ");
-    print_field("年龄", COL_AGE, 0); printf(" ");
-    print_field("成绩", COL_SCORE, 0); printf(" ");
-    print_field("学院", COL_COLLEGE, 1); printf("\n");
+    print_field("学号", COL_ID, 0);
+    printf(" ");
+    print_field("姓名", COL_NAME, 1);
+    printf(" ");
+    print_field("性别", COL_GENDER, 1);
+    printf(" ");
+    print_field("年龄", COL_AGE, 0);
+    printf(" ");
+    print_field("成绩", COL_SCORE, 0);
+    printf(" ");
+    print_field("学院", COL_COLLEGE, 1);
+    printf("\n");
 
     int total = (COL_ID + 1) + (COL_NAME + 1) + (COL_GENDER + 1) + (COL_AGE + 1)
               + (COL_SCORE + 1) + COL_COLLEGE;
@@ -29,14 +35,20 @@ static void print_student_table_row(const Student *s) {
 
     char buf[64];
     snprintf(buf, sizeof(buf), "%d", s->id);
-    print_field(buf, COL_ID, 0); printf(" ");
-    print_field(s->name, COL_NAME, 1); printf(" ");
-    print_field(s->gender, COL_GENDER, 1); printf(" ");
+    print_field(buf, COL_ID, 0);
+    printf(" ");
+    print_field(s->name, COL_NAME, 1);
+    printf(" ");
+    print_field(s->gender, COL_GENDER, 1);
+    printf(" ");
     snprintf(buf, sizeof(buf), "%d", s->age);
-    print_field(buf, COL_AGE, 0); printf(" ");
+    print_field(buf, COL_AGE, 0);
+    printf(" ");
     snprintf(buf, sizeof(buf), "%.2f", s->score);
-    print_field(buf, COL_SCORE, 0); printf(" ");
-    print_field(s->college, COL_COLLEGE, 1); printf("\n");
+    print_field(buf, COL_SCORE, 0);
+    printf(" ");
+    print_field(s->college, COL_COLLEGE, 1);
+    printf("\n");
 }
 
 static void menu_search_student(void) {
