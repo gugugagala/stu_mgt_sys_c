@@ -57,10 +57,14 @@ void hash_destroy(void) {
 }
 
 Student* hash_find(int id) {
-    if (!buckets) return NULL;
+    if (!buckets) {
+        return NULL;
+    }
     int idx = id % capacity;
     for (Student *p = buckets[idx]; p; p = p->hash_next) {
-        if (p->id == id) return p;
+        if (p->id == id) {
+            return p;
+        }
     }
     return NULL;
 }
@@ -79,7 +83,9 @@ void hash_insert(Student *node) {
 }
 
 void hash_remove(int id) {
-    if (!buckets) return;
+    if (!buckets) {
+        return;
+    }
     int idx = id % capacity;
     Student **pp = &buckets[idx];
     while (*pp) {
