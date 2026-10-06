@@ -59,13 +59,18 @@ int load_from_file(Student **head) {
 
         /* 去除末尾换行符 */
         size_t len = strlen(line);
-        if (len > 0 && line[len - 1] == '\n') line[len - 1] = '\0';
-        if (line[0] == '\0') continue;   /* 跳过空行 */
+        if ((len > 0 )&& (line[len - 1] == '\n')) {
+            line[len - 1] = '\0';
+        }
+        if (line[0] == '\0') {
+            continue;   /* 跳过空行 */
+        }
 
         struct ParsedRecord rec;
 
-        if (parse_record_line(line, line_no, &rec) != 0)
+        if (parse_record_line(line, line_no, &rec) != 0) {
             continue;
+        }
 
         if (!append_new_node(head, &tail, &rec)) {
             fclose(fp);
@@ -121,7 +126,9 @@ static int parse_record_line(const char *line, int line_no,
 static Student* append_new_node(Student **head, Student **tail,
                                  const struct ParsedRecord *rec) {
     Student *node = create_node();
-    if (!node) return NULL;
+    if (!node) {
+        return NULL;
+    }
 
     node->id = rec->id;
     strncpy(node->name, rec->name, NAME_LEN - 1);
@@ -186,7 +193,10 @@ int save_to_file(const Student *head) {
     tmp = fopen(TEMP_FILE, "w");
     if (!tmp) {
         printf("[!] 无法创建临时文件 %s。\n", TEMP_FILE);
-        if (orig) rename(BACKUP_FILE, DATA_FILE);    /* 恢复原文件 */
+        if (orig) {
+            rename(BACKUP_FILE, DATA_FILE);    /* 恢复原文件 */
+        }
+
         return -1;
     }
 
@@ -199,7 +209,9 @@ int save_to_file(const Student *head) {
         }
     }
 
-    if (fclose(tmp) != 0) write_err = 1;
+    if (fclose(tmp) != 0) {
+        write_err = 1;
+    }
 
     /* 步骤 3：验证并替换 */
     if (write_err) {
